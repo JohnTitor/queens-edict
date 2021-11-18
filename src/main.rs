@@ -48,10 +48,11 @@ fn print_field() {
     use owo_colors::OwoColorize;
     for i in 0..5 {
         if i == 0 {
-            println!("\n{}{}{}", "・・".red(), "・".green(), "・・".red());
+            println!("\n １２３４５");
+            println!("{}{}{}{}", i+1, "・・".red(), "・".green(), "・・".red());
         } else {
-            println!("{}", "・・・・・".red());
+            println!("{}{}", i+1, "・・・・・".red());
         }
     }
-    println!("\n* {} = goal", "・".green());
+    println!("\n({} = goal)", "・".green());
 }
