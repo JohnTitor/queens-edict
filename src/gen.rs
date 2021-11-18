@@ -39,6 +39,17 @@ impl std::fmt::Display for Direction {
     }
 }
 
+impl Into<u8> for Direction {
+    fn into(self) -> u8 {
+        match self {
+            Direction::Upward => 4,
+            Direction::Downward => 2,
+            Direction::Leftward => 4,
+            Direction::Rightward => 2,
+        }
+    }
+}
+
 impl Into<i32> for Direction {
     fn into(self) -> i32 {
         match self {
