@@ -1,7 +1,7 @@
-use rand::seq::SliceRandom;
+use owo_colors::OwoColorize;
+use rand::{distributions::Standard, prelude::Distribution, seq::SliceRandom, Rng};
 
 fn main() {
-    println!("player steps: {:?}\nenemy steps: {:?}", gen_player_steps(), gen_enemies_steps());
     print_field();
 }
 
@@ -45,14 +45,100 @@ fn gen_enemies_steps() -> Vec<(u8, u8)> {
 
 /// Pretty-print the field.
 fn print_field() {
-    use owo_colors::OwoColorize;
-    for i in 0..5 {
-        if i == 0 {
-            println!("\n １２３４５");
-            println!("{}{}{}{}", i+1, "・・".red(), "・".green(), "・・".red());
-        } else {
-            println!("{}{}", i+1, "・・・・・".red());
+    let player_steps = gen_player_steps();
+    let enemies_steps = gen_enemies_steps();
+    let (west_enemy, east_enemy) = gen_enemies_positions(enemies_steps[0]);
+    println!(
+        "player steps: {:?}\nenemy steps: {:?}",
+        player_steps, enemies_steps
+    );
+
+    for i in 1..=5 {
+        match i {
+            1 => {
+                println!("\n     １２３４５");
+                println!("    {}{}{}{}", i, "・・".red(), "・".green(), "・・".red());
+            }
+            2 if i == west_enemy.direction.into() => {
+                println!("{} @ {}{}", west_enemy.steps, i, "・・・・・".red());
+            }
+            2 => {
+                println!("    {}{}@ {}", i, "・・・・・".red(), east_enemy.steps);
+            }
+            3 => println!(
+                "  {} {}{}{}",
+                west_enemy.direction,
+                i,
+                "・・・・・".red(),
+                east_enemy.direction
+            ),
+            4 if i == west_enemy.direction.into() => {
+                println!("{} @ {}{}", west_enemy.steps, i, "・・・・・".red());
+            }
+            4 => {
+                println!("    {}{}@ {}", i, "・・・・・".red(), east_enemy.steps);
+            }
+            _ => println!("    {}{}", i, "・・・・・".red()),
         }
     }
     println!("\n({} = goal)", "・".green());
+}
+
+#[derive(Debug, Clone, Copy)]
+struct Position {
+    steps: u8,
+    direction: Direction,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum Direction {
+    Upward,
+    Downward,
+}
+
+impl std::fmt::Display for Direction {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match *self {
+            Direction::Upward => write!(f, "↑"),
+            Direction::Downward => write!(f, "↓"),
+        }
+    }
+}
+
+impl Into<i32> for Direction {
+    fn into(self) -> i32 {
+        match self {
+            Direction::Upward => 4,
+            Direction::Downward => 2,
+        }
+    }
+}
+
+impl Distribution<Direction> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Direction {
+        match rng.gen_range(0..=1) {
+            0 => Direction::Upward,
+            _ => Direction::Downward,
+        }
+    }
+}
+
+fn gen_enemies_positions(steps: (u8, u8)) -> (Position, Position) {
+    let direction: Direction = rand::random();
+    let second_direction = if direction == Direction::Upward {
+        Direction::Downward
+    } else {
+        Direction::Upward
+    };
+
+    (
+        Position {
+            steps: steps.0,
+            direction,
+        },
+        Position {
+            steps: steps.1,
+            direction: second_direction,
+        },
+    )
 }
