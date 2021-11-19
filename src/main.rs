@@ -237,3 +237,26 @@ fn move_check(
 
     debuff == moved_column + moved_row
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_attack_check() {
+        assert!(!attack_check(2, 4, 1, 3, 1));
+        assert!(attack_check(2, 4, 1, 3, 2));
+        assert!(!attack_check(2, 4, 1, 3, 3));
+        assert!(attack_check(2, 4, 1, 3, 4));
+        assert!(attack_check(2, 4, 1, 3, 5));
+    }
+
+    #[test]
+    fn test_move_check() {
+        assert!(move_check(2, 1, 5, 4, 2));
+        assert!(move_check(1, 3, 4, 1, 5));
+
+        assert!(move_check(1, 1, 5, 2, 3));
+        assert!(move_check(1, 3, 2, 1, 3));
+    }
+}
