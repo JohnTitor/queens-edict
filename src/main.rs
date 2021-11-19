@@ -19,6 +19,8 @@ fn main() {
         east_enemy,
         north_enemy,
         south_enemy,
+        None,
+        true,
     );
 
     let (first_player_column, first_player_row) = ask_player_step(true);
@@ -29,8 +31,8 @@ fn main() {
 
     if !attack_check(
         west_enemy_pos,
-        west_enemy.steps.0,
         east_enemy_pos,
+        west_enemy.steps.0,
         east_enemy.steps.0,
         first_player_row,
     ) {
@@ -40,6 +42,16 @@ fn main() {
     } else {
         println!("{}", "You dodged the attack, great!".green());
     }
+
+    print_field(
+        player_steps,
+        west_enemy,
+        east_enemy,
+        north_enemy,
+        south_enemy,
+        Some((first_player_column, first_player_row)),
+        false,
+    );
 
     let (second_player_column, second_player_row) = ask_player_step(false);
     println!("");
@@ -61,8 +73,8 @@ fn main() {
 
     if !attack_check(
         north_enemy_pos,
-        north_enemy.steps.0,
         south_enemy_pos,
+        north_enemy.steps.0,
         south_enemy.steps.0,
         second_player_column,
     ) {
@@ -103,13 +115,23 @@ fn print_field(
     east_enemy: Pos,
     north_enemy: Pos,
     south_enemy: Pos,
+    player_pos: Option<(u8, u8)>,
+    is_first: bool,
 ) {
-    println!("The Queen: Lady of blades, I beseech you -- grant me the strength to overcome our oppressors! \
-    To reclaim what is rightfully ours!\n");
-    println!(
-        "The Queen gave you edict...\nFirst: {}\nSecond: {}\n",
-        player_steps.0 .0, player_steps.1 .0
-    );
+    if is_first {
+        println!("The Queen: Lady of blades, I beseech you -- grant me the strength to overcome our oppressors! \
+                    To reclaim what is rightfully ours!\n");
+        println!(
+            "The Queen gave you edict...\nFirst: {}\nSecond: {}\n",
+            player_steps.0 .0, player_steps.1 .0
+        );
+    } else {
+        println!("\nSecond move...");
+        println!(
+            "Your edict is...\nFirst: {}\nSecond: {}\n",
+            player_steps.0 .0, player_steps.1 .0
+        );
+    }
 
     for i in 0..=6 {
         match i {
@@ -119,29 +141,106 @@ fn print_field(
                 } else {
                     println!("        {} {}", north_enemy.direction, north_enemy.steps);
                 };
+
+                println!("    １２３４５");
             }
             1 => {
-                println!("    １２３４５");
-                println!("   {}{}{}{}", i, "・・".red(), "・".green(), "・・".red());
+                if !is_first && player_pos.unwrap().1 == 1 {
+                    print!("   {}", i);
+                    for i in 1..=5 {
+                        if i == player_pos.unwrap().0 {
+                            print!("{}", "・".yellow());
+                        } else if i == 3 {
+                            print!("{}", "・".green());
+                        } else {
+                            print!("{}", "・".red());
+                        }
+                    }
+                    println!("");
+                } else {
+                    println!("   {}{}{}{}", i, "・・".red(), "・".green(), "・・".red());
+                }
             }
-            2 if i == west_enemy.direction.into() => {
-                println!(" {} {}{}", west_enemy.steps, i, "・・・・・".red());
+            2 if is_first => {
+                if i == west_enemy.direction.into() {
+                    println!(" {} {}{}", west_enemy.steps, i, "・・・・・".red())
+                } else {
+                    println!("   {}{}{}", i, "・・・・・".red(), east_enemy.steps);
+                }
             }
             2 => {
-                println!("   {}{}{}", i, "・・・・・".red(), east_enemy.steps);
+                if player_pos.unwrap().1 == 2 {
+                    print!("   {}", i);
+                    for i in 1..=5 {
+                        if i == player_pos.unwrap().0 {
+                            print!("{}", "・".yellow());
+                        } else {
+                            print!("{}", "・".red());
+                        }
+                    }
+                    println!("");
+                } else {
+                    println!("   {}{}", i, "・・・・・".red());
+                }
             }
-            3 => println!(
+            3 if is_first => println!(
                 " {} {}{}{}",
                 west_enemy.direction,
                 i,
                 "・・・・・".red(),
                 east_enemy.direction
             ),
-            4 if i == west_enemy.direction.into() => {
-                println!(" {} {}{}", west_enemy.steps, i, "・・・・・".red());
+            3 => {
+                if player_pos.unwrap().1 == 3 {
+                    print!("   {}", i);
+                    for i in 1..=5 {
+                        if i == player_pos.unwrap().0 {
+                            print!("{}", "・".yellow());
+                        } else {
+                            print!("{}", "・".red());
+                        }
+                    }
+                    println!("");
+                } else {
+                    println!("   {}{}", i, "・・・・・".red());
+                }
+            }
+            4 if is_first => {
+                if i == west_enemy.direction.into() {
+                    println!(" {} {}{}", west_enemy.steps, i, "・・・・・".red());
+                } else {
+                    println!("   {}{}{}", i, "・・・・・".red(), east_enemy.steps);
+                }
             }
             4 => {
-                println!("   {}{}{}", i, "・・・・・".red(), east_enemy.steps);
+                if player_pos.unwrap().1 == 4 {
+                    print!("   {}", i);
+                    for i in 1..=5 {
+                        if i == player_pos.unwrap().0 {
+                            print!("{}", "・".yellow());
+                        } else {
+                            print!("{}", "・".red());
+                        }
+                    }
+                    println!("");
+                } else {
+                    println!("   {}{}", i, "・・・・・".red());
+                }
+            }
+            5 => {
+                if !is_first && player_pos.unwrap().1 == 5 {
+                    print!("   {}", i);
+                    for i in 1..=5 {
+                        if i == player_pos.unwrap().0 {
+                            print!("{}", "・".yellow());
+                        } else {
+                            print!("{}", "・".red());
+                        }
+                    }
+                    println!("");
+                } else {
+                    println!("   {}{}", i, "・・・・・".red());
+                }
             }
             6 => {
                 if 2 == south_enemy.direction.into() {
@@ -150,10 +249,15 @@ fn print_field(
                     println!("        {} {}", south_enemy.direction, south_enemy.steps);
                 };
             }
-            _ => println!("   {}{}", i, "・・・・・".red()),
+            _ => panic!("Shouldn't reach here!"),
         }
     }
-    println!("\n({} = goal)", "・".green());
+
+    if is_first {
+        println!("\n({} = goal)", "・".green());
+    } else {
+        println!("\n({} = goal, {} = you)", "・".green(), "・".yellow());
+    }
 }
 
 fn ask_player_step(is_first: bool) -> (u8, u8) {
