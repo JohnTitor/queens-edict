@@ -25,19 +25,15 @@ fn main() {
     println!("");
 
     let west_enemy_pos: u8 = west_enemy.direction.into();
-    let west_row = if west_enemy_pos == 2 {
-        west_enemy_pos + west_enemy.steps.0
-    } else {
-        west_enemy_pos - west_enemy.steps.0
-    };
     let east_enemy_pos: u8 = east_enemy.direction.into();
-    let east_row = if east_enemy_pos == 2 {
-        east_enemy_pos + east_enemy.steps.0
-    } else {
-        east_enemy_pos - east_enemy.steps.0
-    };
 
-    if west_row == first_player_row || east_row == first_player_row {
+    if !attack_check(
+        west_enemy_pos,
+        west_enemy.steps.0,
+        east_enemy_pos,
+        east_enemy.steps.0,
+        first_player_row,
+    ) {
         println!("You were hit by the attack X(");
         println!("{}", "Game Over!".red());
         std::process::exit(0);
@@ -48,45 +44,44 @@ fn main() {
     let (second_player_column, second_player_row) = ask_player_step(false);
     println!("");
 
-    let moved_column = std::cmp::max(second_player_column.saturating_sub(first_player_column), first_player_column.saturating_sub(second_player_column));
-    let moved_row = std::cmp::max(second_player_row.saturating_sub(first_player_row), first_player_row.saturating_sub(second_player_row));
-    if player_steps.0.0 != moved_column + moved_row {
+    if !move_check(first_player_column, second_player_column, first_player_row, second_player_row, player_steps.0.0) {
         println!("{}", "Failed to pass the first debuff X(".red());
         println!("{}", "Game Over!".red());
         std::process::exit(0);
     }
 
     let north_enemy_pos: u8 = north_enemy.direction.into();
-    let north_column = if north_enemy_pos == 2 {
-        north_enemy_pos + north_enemy.steps.0
-    } else {
-        north_enemy_pos - north_enemy.steps.0
-    };
     let south_enemy_pos: u8 = south_enemy.direction.into();
-    let south_column = if south_enemy_pos == 2 {
-        south_enemy_pos + south_enemy.steps.0
-    } else {
-        south_enemy_pos - south_enemy.steps.0
-    };
-    if north_column == second_player_column || south_column == second_player_column {
+
+    if !attack_check(
+        north_enemy_pos,
+        north_enemy.steps.0,
+        south_enemy_pos,
+        south_enemy.steps.0,
+        second_player_column,
+    ) {
         println!("{}", "You were hit by the attack X(".red());
         println!("{}", "Game Over!".red());
         std::process::exit(0);
     } else {
-        println!("{}", "You dodged the second attack and passed the first debuff...".green());
+        println!(
+            "{}",
+            "You dodged the second attack and passed the first debuff...".green()
+        );
     }
 
     println!("\nFinally, all you need is go to the goal, run, run, run!\n\n");
 
-    let moved_column = std::cmp::max(second_player_column.saturating_sub(3), 3_u8.saturating_sub(second_player_column));
-    let moved_row = std::cmp::max(second_player_row.saturating_sub(1), 1_u8.saturating_sub(second_player_row));
-    if player_steps.1.0 - player_steps.0.0 != moved_column + moved_row {
+    if !move_check(second_player_column, 3, second_player_row, 1, player_steps.1.0 - player_steps.0.0) {
         println!("{}", "Failed to pass the second debuff X(".red());
         println!("{}", "Game Over!".red());
         std::process::exit(0);
     }
 
-    println!("{}", "Hooray! Passed the second debuff, you survived!!!".green());
+    println!(
+        "{}",
+        "Hooray! Passed the second debuff, you survived!!!".green()
+    );
 }
 
 /// Pretty-print the field.
@@ -99,7 +94,8 @@ fn print_field(
 ) {
     println!(
         "The queen gave you elects...\nFirst: {}\nSecond: {}\n",
-        player_steps.0.0, player_steps.1.0 - player_steps.0.0
+        player_steps.0 .0,
+        player_steps.1 .0 - player_steps.0 .0
     );
 
     for i in 0..=6 {
@@ -180,7 +176,46 @@ fn ask_player_step(is_first: bool) -> (u8, u8) {
         steps.push(input);
     }
 
-    assert!(steps.len() == 2, "you have to specify two numbers, exiting...");
+    assert!(
+        steps.len() == 2,
+        "you have to specify two numbers, exiting..."
+    );
 
     (steps[0], steps[1])
+}
+
+/// Checks if the player is hit by the enemies' attacks.
+fn attack_check(
+    enemy1_pos: u8,
+    enemy2_pos: u8,
+    enemy1_steps: u8,
+    enemy2_steps: u8,
+    player_pos: u8,
+) -> bool {
+    let enemy1_pos = if enemy1_pos == 2 {
+        enemy1_pos + enemy1_steps
+    } else {
+        enemy1_pos - enemy1_steps
+    };
+    let enemy2_pos = if enemy2_pos == 2 {
+        enemy2_pos + enemy2_steps
+    } else {
+        enemy2_pos - enemy2_steps
+    };
+
+    enemy1_pos != player_pos && enemy2_pos != player_pos
+}
+
+/// Checks if the player passes the debuffs.
+fn move_check(before_column: u8, after_column: u8, before_row: u8, after_row: u8, debuff: u8) -> bool {
+    let moved_column = std::cmp::max(
+        before_column.saturating_sub(after_column),
+        after_column.saturating_sub(before_column),
+    );
+    let moved_row = std::cmp::max(
+        after_row.saturating_sub(before_row),
+        before_row.saturating_sub(after_row),
+    );
+
+    debuff == moved_column + moved_row
 }
