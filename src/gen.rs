@@ -75,7 +75,7 @@ pub(crate) fn gen_player_steps() -> (Steps, Steps) {
     let first_step: u8 = *[2, 3, 4].choose(&mut rng).unwrap();
     let sum: u8 = *[5, 6, 7].choose(&mut rng).unwrap();
 
-    (Steps(first_step), Steps(sum))
+    (Steps(first_step), Steps(sum - first_step))
 }
 
 /// Generate the number of steps that the enemies will move.

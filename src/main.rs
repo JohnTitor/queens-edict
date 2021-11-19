@@ -83,7 +83,7 @@ fn main() {
         3,
         second_player_row,
         1,
-        player_steps.1 .0 - player_steps.0 .0,
+        player_steps.1 .0,
     ) {
         println!("{}", "Failed to pass the second debuff X(".red());
         println!("{}", "Game Over!".red());
@@ -107,7 +107,7 @@ fn print_field(
     println!(
         "The queen gave you elects...\nFirst: {}\nSecond: {}\n",
         player_steps.0 .0,
-        player_steps.1 .0 - player_steps.0 .0
+        player_steps.1 .0
     );
 
     for i in 0..=6 {
