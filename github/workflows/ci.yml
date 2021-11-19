@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+
+    name: Cargo test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+        run: rustup override set stable
+
+      - name: Check with rustfmt and clippy
+        run: |
+          rustup component add clippy rustfmt
+          cargo fmt -- --check
+          cargo clippy
+
+      - name: Run tests
+        run: cargo test

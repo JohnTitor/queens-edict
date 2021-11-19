@@ -39,9 +39,9 @@ impl std::fmt::Display for Direction {
     }
 }
 
-impl Into<u8> for Direction {
-    fn into(self) -> u8 {
-        match self {
+impl From<Direction> for u8 {
+    fn from(direction: Direction) -> u8 {
+        match direction {
             Direction::Upward => 4,
             Direction::Downward => 2,
             Direction::Leftward => 4,
@@ -50,9 +50,9 @@ impl Into<u8> for Direction {
     }
 }
 
-impl Into<i32> for Direction {
-    fn into(self) -> i32 {
-        match self {
+impl From<Direction> for i32 {
+    fn from(direction: Direction) -> i32 {
+        match direction {
             Direction::Upward => 4,
             Direction::Downward => 2,
             Direction::Leftward => 4,
@@ -106,6 +106,7 @@ pub(crate) fn gen_enemies_poss(steps: (Steps, Steps), east_and_west: bool) -> (P
     // SAFETY: Unwrap here is safe as the slice isn't empty.
     let n = *[0, 1].choose(&mut rng).unwrap();
 
+    #[allow(clippy::collapsible_else_if)] // The current is easier to understand.
     let (direction, second_direction) = if n == 0 {
         if east_and_west {
             (Direction::Downward, Direction::Upward)

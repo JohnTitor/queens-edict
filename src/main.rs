@@ -24,7 +24,7 @@ fn main() {
     );
 
     let (first_player_column, first_player_row) = ask_player_step(true);
-    println!("");
+    println!();
 
     let west_enemy_pos: u8 = west_enemy.direction.into();
     let east_enemy_pos: u8 = east_enemy.direction.into();
@@ -54,7 +54,7 @@ fn main() {
     );
 
     let (second_player_column, second_player_row) = ask_player_step(false);
-    println!("");
+    println!();
 
     if !move_check(
         first_player_column,
@@ -156,7 +156,7 @@ fn print_field(
                             print!("{}", "・".red());
                         }
                     }
-                    println!("");
+                    println!();
                 } else {
                     println!("   {}{}{}{}", i, "・・".red(), "・".green(), "・・".red());
                 }
@@ -178,7 +178,7 @@ fn print_field(
                             print!("{}", "・".red());
                         }
                     }
-                    println!("");
+                    println!();
                 } else {
                     println!("   {}{}", i, "・・・・・".red());
                 }
@@ -200,7 +200,7 @@ fn print_field(
                             print!("{}", "・".red());
                         }
                     }
-                    println!("");
+                    println!();
                 } else {
                     println!("   {}{}", i, "・・・・・".red());
                 }
@@ -222,7 +222,7 @@ fn print_field(
                             print!("{}", "・".red());
                         }
                     }
-                    println!("");
+                    println!();
                 } else {
                     println!("   {}{}", i, "・・・・・".red());
                 }
@@ -237,7 +237,7 @@ fn print_field(
                             print!("{}", "・".red());
                         }
                     }
-                    println!("");
+                    println!();
                 } else {
                     println!("   {}{}", i, "・・・・・".red());
                 }
