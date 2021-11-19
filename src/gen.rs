@@ -73,7 +73,14 @@ pub(crate) fn gen_player_steps() -> (Steps, Steps) {
 
     // SAFETY: unwraps are safe as the slices aren't empty.
     let first_step: u8 = *[2, 3, 4].choose(&mut rng).unwrap();
-    let sum: u8 = *[5, 6, 7].choose(&mut rng).unwrap();
+    let pool = if first_step == 2 {
+        [5, 6].to_vec()
+    } else if first_step == 3 {
+        [5, 7].to_vec()
+    } else /* 4 */ {
+        [6, 7].to_vec()
+    };
+    let sum: u8 = *pool.choose(&mut rng).unwrap();
 
     (Steps(first_step), Steps(sum - first_step))
 }
