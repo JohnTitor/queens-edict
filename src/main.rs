@@ -44,7 +44,13 @@ fn main() {
     let (second_player_column, second_player_row) = ask_player_step(false);
     println!("");
 
-    if !move_check(first_player_column, second_player_column, first_player_row, second_player_row, player_steps.0.0) {
+    if !move_check(
+        first_player_column,
+        second_player_column,
+        first_player_row,
+        second_player_row,
+        player_steps.0 .0,
+    ) {
         println!("{}", "Failed to pass the first debuff X(".red());
         println!("{}", "Game Over!".red());
         std::process::exit(0);
@@ -72,7 +78,13 @@ fn main() {
 
     println!("\nFinally, all you need is go to the goal, run, run, run!\n\n");
 
-    if !move_check(second_player_column, 3, second_player_row, 1, player_steps.1.0 - player_steps.0.0) {
+    if !move_check(
+        second_player_column,
+        3,
+        second_player_row,
+        1,
+        player_steps.1 .0 - player_steps.0 .0,
+    ) {
         println!("{}", "Failed to pass the second debuff X(".red());
         println!("{}", "Game Over!".red());
         std::process::exit(0);
@@ -207,7 +219,13 @@ fn attack_check(
 }
 
 /// Checks if the player passes the debuffs.
-fn move_check(before_column: u8, after_column: u8, before_row: u8, after_row: u8, debuff: u8) -> bool {
+fn move_check(
+    before_column: u8,
+    after_column: u8,
+    before_row: u8,
+    after_row: u8,
+    debuff: u8,
+) -> bool {
     let moved_column = std::cmp::max(
         before_column.saturating_sub(after_column),
         after_column.saturating_sub(before_column),
