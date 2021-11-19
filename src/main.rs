@@ -106,8 +106,7 @@ fn print_field(
 ) {
     println!(
         "The queen gave you elects...\nFirst: {}\nSecond: {}\n",
-        player_steps.0 .0,
-        player_steps.1 .0
+        player_steps.0 .0, player_steps.1 .0
     );
 
     for i in 0..=6 {
