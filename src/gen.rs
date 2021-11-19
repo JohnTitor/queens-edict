@@ -1,7 +1,7 @@
 use rand::seq::SliceRandom;
 
 #[derive(Debug, Clone, Copy)]
-pub(crate) struct Position {
+pub(crate) struct Pos {
     pub steps: Steps,
     pub direction: Direction,
 }
@@ -100,10 +100,7 @@ pub(crate) fn gen_enemies_steps() -> Vec<(Steps, Steps)> {
 }
 
 /// Generate enemies' positions.
-pub(crate) fn gen_enemies_positions(
-    steps: (Steps, Steps),
-    east_and_west: bool,
-) -> (Position, Position) {
+pub(crate) fn gen_enemies_poss(steps: (Steps, Steps), east_and_west: bool) -> (Pos, Pos) {
     let mut rng = rand::thread_rng();
 
     // SAFETY: Unwrap here is safe as the slice isn't empty.
@@ -124,11 +121,11 @@ pub(crate) fn gen_enemies_positions(
     };
 
     (
-        Position {
+        Pos {
             steps: steps.0,
             direction,
         },
-        Position {
+        Pos {
             steps: steps.1,
             direction: second_direction,
         },

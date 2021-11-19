@@ -9,8 +9,8 @@ fn main() {
     // Generate steps and enemies' positions.
     let player_steps = gen_player_steps();
     let enemies_steps = gen_enemies_steps();
-    let (west_enemy, east_enemy) = gen_enemies_positions(enemies_steps[0], true);
-    let (north_enemy, south_enemy) = gen_enemies_positions(enemies_steps[1], false);
+    let (west_enemy, east_enemy) = gen_enemies_poss(enemies_steps[0], true);
+    let (north_enemy, south_enemy) = gen_enemies_poss(enemies_steps[1], false);
 
     // Print them.
     print_field(
@@ -99,10 +99,10 @@ fn main() {
 /// Pretty-print the field.
 fn print_field(
     player_steps: (Steps, Steps),
-    west_enemy: Position,
-    east_enemy: Position,
-    north_enemy: Position,
-    south_enemy: Position,
+    west_enemy: Pos,
+    east_enemy: Pos,
+    north_enemy: Pos,
+    south_enemy: Pos,
 ) {
     println!("The Queen: Lady of blades, I beseech you -- grant me the strength to overcome our oppressors! \
     To reclaim what is rightfully ours!\n");
