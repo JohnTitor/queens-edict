@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-        run: rustup override set stable
+      - run: rustup override set stable
 
       - name: Check with rustfmt and clippy
         run: |
