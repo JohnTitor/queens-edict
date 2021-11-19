@@ -104,8 +104,10 @@ fn print_field(
     north_enemy: Position,
     south_enemy: Position,
 ) {
+    println!("The Queen: Lady of blades, I beseech you -- grant me the strength to overcome our oppressors! \
+    To reclaim what is rightfully ours!\n");
     println!(
-        "The queen gave you elects...\nFirst: {}\nSecond: {}\n",
+        "The Queen gave you edict...\nFirst: {}\nSecond: {}\n",
         player_steps.0 .0, player_steps.1 .0
     );
 
