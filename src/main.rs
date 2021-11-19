@@ -15,14 +15,13 @@ fn main() {
     // Print them.
     print_field(
         player_steps,
-        enemies_steps,
         west_enemy,
         east_enemy,
         north_enemy,
         south_enemy,
     );
 
-    let (first_player_column, first_player_row) = ask_player_step();
+    let (first_player_column, first_player_row) = ask_player_step(true);
     println!("");
 
     let west_enemy_pos: u8 = west_enemy.direction.into();
@@ -38,26 +37,69 @@ fn main() {
         east_enemy_pos - east_enemy.steps.0
     };
 
-    if west_row == first_player_row.0 || east_row == first_player_row.0 {
+    if west_row == first_player_row || east_row == first_player_row {
         println!("You were hit by the attack X(");
         println!("{}", "Game Over!".red());
+        std::process::exit(0);
     } else {
         println!("{}", "You dodged the attack, great!".green());
     }
+
+    let (second_player_column, second_player_row) = ask_player_step(false);
+    println!("");
+
+    let moved_column = std::cmp::max(second_player_column.saturating_sub(first_player_column), first_player_column.saturating_sub(second_player_column));
+    let moved_row = std::cmp::max(second_player_row.saturating_sub(first_player_row), first_player_row.saturating_sub(second_player_row));
+    if player_steps.0.0 != moved_column + moved_row {
+        println!("{}", "Failed to pass the first debuff X(".red());
+        println!("{}", "Game Over!".red());
+        std::process::exit(0);
+    }
+
+    let north_enemy_pos: u8 = north_enemy.direction.into();
+    let north_column = if north_enemy_pos == 2 {
+        north_enemy_pos + north_enemy.steps.0
+    } else {
+        north_enemy_pos - north_enemy.steps.0
+    };
+    let south_enemy_pos: u8 = south_enemy.direction.into();
+    let south_column = if south_enemy_pos == 2 {
+        south_enemy_pos + south_enemy.steps.0
+    } else {
+        south_enemy_pos - south_enemy.steps.0
+    };
+    if north_column == second_player_column || south_column == second_player_column {
+        println!("{}", "You were hit by the attack X(".red());
+        println!("{}", "Game Over!".red());
+        std::process::exit(0);
+    } else {
+        println!("{}", "You dodged the second attack and passed the first debuff...".green());
+    }
+
+    println!("\nFinally, all you need is go to the goal, run, run, run!\n\n");
+
+    let moved_column = std::cmp::max(second_player_column.saturating_sub(3), 3_u8.saturating_sub(second_player_column));
+    let moved_row = std::cmp::max(second_player_row.saturating_sub(1), 1_u8.saturating_sub(second_player_row));
+    if player_steps.1.0 - player_steps.0.0 != moved_column + moved_row {
+        println!("{}", "Failed to pass the second debuff X(".red());
+        println!("{}", "Game Over!".red());
+        std::process::exit(0);
+    }
+
+    println!("{}", "Hooray! Passed the second debuff, you survived!!!".green());
 }
 
 /// Pretty-print the field.
 fn print_field(
     player_steps: (Steps, Steps),
-    enemies_steps: Vec<(Steps, Steps)>,
     west_enemy: Position,
     east_enemy: Position,
     north_enemy: Position,
     south_enemy: Position,
 ) {
     println!(
-        "player steps: {:?}\nenemy steps: {:?}",
-        player_steps, enemies_steps
+        "The queen gave you elects...\nFirst: {}\nSecond: {}\n",
+        player_steps.0.0, player_steps.1.0 - player_steps.0.0
     );
 
     for i in 0..=6 {
@@ -105,10 +147,14 @@ fn print_field(
     println!("\n({} = goal)", "・".green());
 }
 
-fn ask_player_step() -> (Steps, Steps) {
-    println!("\nEnter the position you want to go.");
-    println!("syntax: column row");
-    println!("example: 4 2\n");
+fn ask_player_step(is_first: bool) -> (u8, u8) {
+    if is_first {
+        println!("\nEnter your first position you want to go.");
+        println!("syntax: column row");
+        println!("example: 4 2\n");
+    } else {
+        println!("\nEnter your second position you want to go.\n");
+    }
     print!("> ");
 
     let mut line = String::new();
@@ -134,7 +180,7 @@ fn ask_player_step() -> (Steps, Steps) {
         steps.push(input);
     }
 
-    assert!(steps.len() == 2);
+    assert!(steps.len() == 2, "you have to specify two numbers, exiting...");
 
-    (Steps(steps[0]), Steps(steps[1]))
+    (steps[0], steps[1])
 }
