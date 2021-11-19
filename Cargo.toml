@@ -1,7 +1,13 @@
 [package]
-name = "queens-elect"
+name = "queens-edict"
+description = "CLI tool to play the Queen's Edict in the Delubrum Reginae (Savage)"
 version = "0.1.0"
 edition = "2021"
+license = "MIT OR Apache-2.0"
+keywords = ["cli"]
+categories = ["command-line-utilities"]
+readme = "README.md"
+repository = "https://github.com/JohnTitor/queens-edict"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
