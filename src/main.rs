@@ -278,7 +278,7 @@ fn ask_player_step(is_first: bool) -> (u8, u8) {
         .read_line(&mut line)
         .expect("failed to read your input, exiting...");
 
-    for (n, c) in line.trim().split_whitespace().enumerate() {
+    for (n, c) in line.split_whitespace().enumerate() {
         if n > 1 {
             println!("you specified more than two numbers, ignoring...");
             break;
