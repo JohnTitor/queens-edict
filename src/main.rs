@@ -40,7 +40,7 @@ fn main() {
         println!("{}", "Game Over!".red());
         std::process::exit(0);
     } else {
-        println!("{}", "You dodged the attack, great!".green());
+        println!("{}", "You dodged the first attack, great!".green());
     }
 
     print_field(
